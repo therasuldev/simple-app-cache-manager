@@ -2,6 +2,7 @@
 
 A Flutter package for managing application cache efficiently. This package provides methods to check cache existence, calculate total cache size, and clear the cache. It is designed to simplify cache management, especially for file system caching.
 
+<img width="419" alt="screen" src="https://github.com/therasuldev/simple_app_cache_manager/assets/74558294/4710d362-a07f-4cfa-90c8-f6abd71f6ded">
 
 ## Features
 
