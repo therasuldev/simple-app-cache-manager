@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'simple_app_cache_manager'
-  s.version          = '0.0.1'
+  s.version          = '0.0.2'
   s.summary          = 'A Flutter package for managing application cache efficiently'
   s.description      = <<-DESC
 A new Flutter project.

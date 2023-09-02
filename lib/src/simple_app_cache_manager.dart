@@ -13,7 +13,8 @@ import 'package:simple_app_cache_manager/src/i_simple_app_cache_manager.dart';
 /// It uses platform-specific methods to interact with the cache directory
 /// and communicate with native code through method channels.
 class SimpleAppCacheManager extends ISimpleAppCacheManager {
-  final MethodChannel _channel = const MethodChannel('simple_app_cache_manager');
+  final MethodChannel _channel =
+      const MethodChannel('simple_app_cache_manager');
 
   @override
   Future<bool> get checkCacheExistence async {
@@ -37,9 +38,16 @@ class SimpleAppCacheManager extends ISimpleAppCacheManager {
   Future<String> getTotalCacheSize() async {
     try {
       if (Platform.isAndroid) {
-        final tempDir = await getTemporaryDirectory();
-        final tempDirSize = _calculateDirectorySize(tempDir);
-        return _formatBytes(tempDirSize);
+        // We need to determine if the cache path exists.
+        // It will be necessary to check the current cache size after deleting the cache.
+        // Otherwise, we will receive the "such path does not exist" error.
+        if (await checkCacheExistence) {
+          final tempDir = await getTemporaryDirectory();
+          final tempDirSize = _calculateDirectorySize(tempDir);
+          return _formatBytes(tempDirSize);
+        }
+        // if the cache path does not exist, it will return 0 B.
+        return _formatBytes(0);
       } else if (Platform.isIOS) {
         final tempDirSize = await _channel.invokeMethod('getTotalCacheSize');
         return tempDirSize;

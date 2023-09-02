@@ -17,7 +17,7 @@ To use this package, add **simple_app_cache_manager** as a dependency in your `p
 dependencies:
   flutter:
     sdk: flutter
-  simple_app_cache_manager: ^0.0.1  # Use the latest version
+  simple_app_cache_manager: ^0.0.2  # Use the latest version
 ```
 Then run the following command to fetch the package:
 
