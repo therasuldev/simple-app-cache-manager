@@ -18,7 +18,7 @@ To use this package, add **simple_app_cache_manager** as a dependency in your `p
 dependencies:
   flutter:
     sdk: flutter
-  simple_app_cache_manager: ^0.0.2  # Use the latest version
+  simple_app_cache_manager: ^0.0.3  # Use the latest version
 ```
 Then run the following command to fetch the package:
 
@@ -31,8 +31,8 @@ flutter pub get
 
 
 ```dart
-import 'package:simple_app_cache_manager/simple_app_cache_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_app_cache_manager/simple_app_cache_manager.dart';
 
 void main() {
   runApp(const Example());
@@ -45,23 +45,7 @@ class Example extends StatefulWidget {
   State<Example> createState() => _ExampleState();
 }
 
-class _ExampleState extends State<Example> {
-  String cacheSize = '';
-  late final SimpleAppCacheManager cacheManager;
-
-  @override
-  void initState() {
-    super.initState();
-    cacheManager = SimpleAppCacheManager();
-    updateCacheSize();
-  }
-
-  @override
-  void didUpdateWidget(covariant Example oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    updateCacheSize();
-  }
-
+class _ExampleState extends State<Example> with CacheMixin {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -70,7 +54,10 @@ class _ExampleState extends State<Example> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(cacheSize),
+              ValueListenableBuilder(
+                valueListenable: cacheSizeNotifier,
+                builder: (context, cacheSize, child) => Text(cacheSize),
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 child: const Text('clear'),
@@ -85,10 +72,22 @@ class _ExampleState extends State<Example> {
       ),
     );
   }
+}
+
+mixin CacheMixin on State<Example> {
+  late final SimpleAppCacheManager cacheManager;
+  late ValueNotifier<String> cacheSizeNotifier = ValueNotifier<String>('');
+
+  @override
+  void initState() {
+    super.initState();
+    cacheManager = SimpleAppCacheManager();
+    updateCacheSize();
+  }
 
   void updateCacheSize() async {
-    final newSize = await cacheManager.getTotalCacheSize();
-    setState(() => cacheSize = newSize);
+    final cacheSize = await cacheManager.getTotalCacheSize();
+    cacheSizeNotifier.value = cacheSize;
   }
 }
 

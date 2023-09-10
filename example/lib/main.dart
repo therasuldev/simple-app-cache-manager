@@ -12,23 +12,7 @@ class Example extends StatefulWidget {
   State<Example> createState() => _ExampleState();
 }
 
-class _ExampleState extends State<Example> {
-  String cacheSize = '';
-  late final SimpleAppCacheManager cacheManager;
-
-  @override
-  void initState() {
-    super.initState();
-    cacheManager = SimpleAppCacheManager();
-    updateCacheSize();
-  }
-
-  @override
-  void didUpdateWidget(covariant Example oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    updateCacheSize();
-  }
-
+class _ExampleState extends State<Example> with CacheMixin {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,7 +21,10 @@ class _ExampleState extends State<Example> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(cacheSize),
+              ValueListenableBuilder(
+                valueListenable: cacheSizeNotifier,
+                builder: (context, cacheSize, child) => Text(cacheSize),
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 child: const Text('clear'),
@@ -52,9 +39,21 @@ class _ExampleState extends State<Example> {
       ),
     );
   }
+}
+
+mixin CacheMixin on State<Example> {
+  late final SimpleAppCacheManager cacheManager;
+  late ValueNotifier<String> cacheSizeNotifier = ValueNotifier<String>('');
+
+  @override
+  void initState() {
+    super.initState();
+    cacheManager = SimpleAppCacheManager();
+    updateCacheSize();
+  }
 
   void updateCacheSize() async {
-    final newSize = await cacheManager.getTotalCacheSize();
-    setState(() => cacheSize = newSize);
+    final cacheSize = await cacheManager.getTotalCacheSize();
+    cacheSizeNotifier.value = cacheSize;
   }
 }
