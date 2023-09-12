@@ -8,3 +8,6 @@
 
 ## 0.0.3 
 * Example modified
+
+## 0.0.4
+* Modified example

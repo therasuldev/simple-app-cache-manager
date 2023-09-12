@@ -18,11 +18,12 @@ To use this package, add **simple_app_cache_manager** as a dependency in your `p
 dependencies:
   flutter:
     sdk: flutter
-  simple_app_cache_manager: ^0.0.3  # Use the latest version
+  simple_app_cache_manager: ^0.0.4  # Use the latest version
 ```
-Then run the following command to fetch the package:
+‼️ Then run the following command to fetch the package:
 
 ```bash
+flutter clean
 flutter pub get
 ```
 
